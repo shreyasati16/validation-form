@@ -4,29 +4,30 @@ import DataTable from "./Datatable";
 
 function App() {
     //const initialValues = { fname: "", lname: "", email: "", password: "" };
-    const [formValues, setFormValues] = useState(() => {
+    const [validatedData, setValidatedData] = useState(() => {
         // getting local stored value
         const saved = localStorage.getItem("finalDat");
         const initialValues = JSON.parse(saved);
-        return (
-            initialValues || [{ fname: "", lname: "", email: "", password: "" }]
-        );
+        return initialValues || [];
     });
+    const [formValues, setFormValues] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         //setFormValues({ ...formValues, [name]: value });
-        setFormValues([{ ...formValues[0], [name]: value }]);
+        setFormValues({ ...formValues, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let validated = validate(formValues[0]);
+        let validated = validate(formValues);
         if (Object.keys(validated).length === 0) {
-            setIsSubmit(true);
             e.target.reset();
+            setFormValues({});
+            setIsSubmit(true);
+            setValidatedData([...validatedData, formValues]);
         } else {
             setFormErrors(validated);
         }
@@ -40,7 +41,7 @@ function App() {
             }
         },
         [formErrors],
-        localStorage.setItem("finalDat", JSON.stringify(formValues))
+        localStorage.setItem("finalDat", JSON.stringify(validatedData))
     );
 
     const validate = (values) => {
@@ -129,7 +130,7 @@ function App() {
                     <button className="fluid ui button blue">Submit</button>
                 </div>
             </form>
-            {formValues.length > 0 && <DataTable valDat={formValues} />}
+            {validatedData.length > 0 && <DataTable valDat={validatedData} />}
         </div>
     );
 }
