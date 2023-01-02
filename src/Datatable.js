@@ -19,8 +19,8 @@ const DataTable = ({ valDat }) => {
                     {valDat &&
                         valDat.map((data, i) => (
                             <tr key={i}>
-                                <td>{data.fName}</td>
-                                <td>{data.lName}</td>
+                                <td>{data.fname}</td>
+                                <td>{data.lname}</td>
                                 <td>{data.email}</td>
                                 <td>{data.password}</td>
                                 {/* <td>
